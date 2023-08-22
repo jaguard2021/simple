@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Contract Interaction</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+</head>
+<body>
+    <h1>Smart Contract Interaction</h1>
+    <label for="num1">Angka 1:</label>
+    <input type="number" id="num1" name="num1"><br>
+    <label for="num2">Angka 2:</label>
+    <input type="number" id="num2" name="num2"><br>
+    <button onclick="callAddFunction()">Tambah</button>
+    <button onclick="callSubtractFunction()">Kurang</button>
+    <p>Hasil Operasi: <span id="operationResult">-</span></p>
+
+    <script>
+        // Masukkan alamat kontrak dan ABI di sini
+        const contractAddress = "0x683Ee29213fB27da15c20D391981b58be7720807";
+        const contractABI = [
+            {"inputs":[{"internalType":"uint256","name":"num1","type":"uint256"},{"internalType":"uint256","name":"num2","type":"uint256"}],"name":"add","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"pure","type":"function"},
+            {"inputs":[{"internalType":"uint256","name":"num1","type":"uint256"},{"internalType":"uint256","name":"num2","type":"uint256"}],"name":"subtract","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"pure","type":"function"}
+        ];
+
+        // Ganti dengan URL HTTP Infura yang sesuai
+        const infuraHttpUrl = 'https://goerli.infura.io/v3/467174e5a6df41ff974f23a13b29e539';
+
+        // Buat objek Web3 menggunakan HTTP provider
+        const web3 = new Web3(new Web3.providers.HttpProvider(infuraHttpUrl));
+        const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+        // Fungsi untuk memanggil fungsi "add" pada kontrak
+        async function callAddFunction() {
+            const num1 = Number(document.getElementById("num1").value);
+            const num2 = Number(document.getElementById("num2").value);
+            const result = await contract.methods.add(num1, num2).call();
+            document.getElementById("operationResult").innerText = result;
+        }
+
+        // Fungsi untuk memanggil fungsi "subtract" pada kontrak
+        async function callSubtractFunction() {
+            const num1 = Number(document.getElementById("num1").value);
+            const num2 = Number(document.getElementById("num2").value);
+            const result = await contract.methods.subtract(num1, num2).call();
+            document.getElementById("operationResult").innerText = result;
+        }
+    </script>
+</body>
+</html>
